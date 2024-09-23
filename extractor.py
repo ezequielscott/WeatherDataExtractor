@@ -24,12 +24,33 @@ class WeatherDataExtractor:
         self.logger = logging.getLogger(__name__)
 
     
-    def __get_data(self, url, params=None):
+    def __get_data(self, url: str, params=None):
+        """Main private method to call the api
+
+        Args:
+            url (str): endpoint 
+            params (dict, optional): dictionary with parameters. Defaults to None.
+
+        Returns:
+            object: response object in json format
+        """
+        
         requests.packages.urllib3.disable_warnings()
         return requests.get(url, headers=self.headers, params=params, verify=False).json()
 
 
     def __get_filenames(self, dataset_name: str, dataset_version: str, params: dict):
+        """Private method to retrieve the list of available files
+
+        Args:
+            dataset_name (str): the name of the dataset
+            dataset_version (str): the verion of the dataset
+            params (dict): additional parameters
+
+        Returns:
+            object: response in json format
+        """
+        
         return self.__get_data(
             f"{self.base_url}/datasets/{dataset_name}/versions/{dataset_version}/files",
             params=params
@@ -37,6 +58,13 @@ class WeatherDataExtractor:
     
 
     def get_dataset_file(self, dataset_name: str, dataset_version: str, file_name: str):
+        """Retrieves and saves the database file in the `data` folder.
+        
+        Args:
+            dataset_name (str): name of the dataset
+            dataset_version (str): version of the dataset
+            file_name (str): filename of the dataset
+        """
         
         # fetch the download url and download the file
         response = self.__get_data(
@@ -57,6 +85,16 @@ class WeatherDataExtractor:
 
 
     def get_latest_filename(self,  dataset_name: str, dataset_version: str):
+        """Retrieves the latest filename of a given dataset 
+
+        Args:
+            dataset_name (str): the name of the dataset
+            dataset_version (str): the version of the dataset
+
+        Returns:
+            str: a string with the filename
+        """
+        
         # sort the files in descending order and only retrieve the first file
         params = {"maxKeys": 1, "orderBy": "created", "sorting": "desc"}
         response = self.__get_filenames(dataset_name, dataset_version, params)
@@ -70,7 +108,14 @@ class WeatherDataExtractor:
         return latest_file
     
 
-    def list_files(self, download_url, filename):
+    def list_files(self, download_url: str, filename: str):
+        """Shows a list of available files
+
+        Args:
+            download_url (str): download url
+            filename (str): filename
+        """
+        
         try:
             with requests.get(download_url, stream=True) as r:
                 r.raise_for_status()
