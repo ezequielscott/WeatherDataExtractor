@@ -7,7 +7,7 @@ This is a simple solution developed fully in Python.
 
 The following diagram shows the main components used to build a data pipeline that extracts data from KNMI sources and saves the data to a database.
 
-![image](docs/MarvelProject.drawio.png)
+![image](docs/design.drawio.png)
 
 ## How to install
 
