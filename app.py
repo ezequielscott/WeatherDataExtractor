@@ -1,7 +1,7 @@
 
 import os
-from weather_extractor import WeatherDataExtractor
-from datetime import datetime
+from extractor import WeatherDataExtractor
+from loader import DataLoader
 
 import logging
 
@@ -26,13 +26,15 @@ if __name__ == '__main__':
 
     # init the extractor
     wext = WeatherDataExtractor(api_key)
-
+    # retrieve the latest filename
     filename = wext.get_latest_filename(dataset_name, dataset_version)
-    
     logging.info(f"Latest filename: {filename}")
-
+    # retrieve and save the file
     wext.get_dataset_file(dataset_name, dataset_version, filename)
-
-    #connection = psycopg2.connect(database="weather", user='root', password='password', host="postgres_db", port=5432)
+    
+    # create a loader
+    loader = DataLoader(database="weather", user='root', password='password', host="postgres_db", port=5432)
+    # load the data
+    loader.load(filename, "weather")
 
     

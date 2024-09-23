@@ -10,7 +10,6 @@ class WeatherDataExtractor:
             api_token: A string with the public key 
         """
         
-        #https://api.dataplatform.knmi.nl/open-data/v1/datasets/Actuele10mindataKNMIstations/versions/2/files
         self.base_url = "https://api.dataplatform.knmi.nl/open-data/v1"
         self.headers = {"Authorization": api_token}
         
@@ -26,13 +25,14 @@ class WeatherDataExtractor:
 
     
     def __get_data(self, url, params=None):
+        requests.packages.urllib3.disable_warnings()
         return requests.get(url, headers=self.headers, params=params, verify=False).json()
 
 
     def __get_filenames(self, dataset_name: str, dataset_version: str, params: dict):
         return self.__get_data(
             f"{self.base_url}/datasets/{dataset_name}/versions/{dataset_version}/files",
-            params=params,
+            params=params
         )
     
 
