@@ -21,6 +21,13 @@ if __name__ == '__main__':
     api_key = os.environ['API_KEY']
     dataset_name = "Actuele10mindataKNMIstations"
     dataset_version = "2"
+    
+    database = 'weather'
+    user = 'root'
+    password = 'password'
+    host = 'postgres_db'
+    port = 5432
+    tablename = 'weather'
 
     logging.info(f"Fetching latest file of {dataset_name} version {dataset_version}")
 
@@ -33,8 +40,8 @@ if __name__ == '__main__':
     wext.get_dataset_file(dataset_name, dataset_version, filename)
     
     # create a loader
-    loader = DataLoader(database="weather", user='root', password='password', host="postgres_db", port=5432)
+    loader = DataLoader(database, user, password, host, port)
     # load the data
-    loader.load(filename, "weather")
+    loader.load(filename, tablename)
 
     
