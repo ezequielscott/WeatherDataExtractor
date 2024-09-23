@@ -1,0 +1,10 @@
+data/*
+logs/*
+
+.env
+
+venv/
+
+Data_engineer_case_1.pdf
+
+.DS_Store

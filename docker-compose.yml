@@ -1,0 +1,46 @@
+# Run as
+#   docker-compose build; docker-compose up -d
+# Check with
+#   docker ps
+# Then check the logs with
+#   docker logs --tail 50 $container_id
+#   docker-compose images
+#   docker-compose logs --tail 20 repo_name
+
+services:
+
+  postgres_db:
+    image: postgres:11.1
+    environment:   # Set up postgres database name and password
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: weather
+      POSTGRES_USER: root
+    ports:    # Set up ports exposed for other containers to connect to
+      - 5433:5432
+    networks:
+      - app-tier
+    volumes:
+      - ./postgres:/docker-entrypoint-initdb.d
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file: ".env"
+    depends_on:
+      - postgres_db
+    networks:
+      - app-tier
+    volumes:
+      - type: bind
+        source: ./data
+        target: /home/admin/app/data
+    #stdin_open: true
+    #tty: true
+
+networks:
+  app-tier:
+    driver: bridge
+
+volumes:
+  myapp:
